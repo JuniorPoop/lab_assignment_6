@@ -1,72 +1,98 @@
-//David Zhang
 #include <stdio.h>
 
-int search(int numbers[], int low, int high, int value) 
-{
-    if (high >= low) 
-    {
-        int mid = low + (high - low) / 2;
+struct Element {
+    int value;
+    int swaps;
+};
 
-        if (numbers[mid] == value)
-            return mid;
-
-        if (numbers[mid] > value)
-            return search(numbers, low, mid - 1, value);
-
-        return search(numbers, mid + 1, high, value);
+void bubbleSort(struct Element arr[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j].value > arr[j + 1].value) {
+                struct Element temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+                arr[j].swaps++;
+                arr[j + 1].swaps++;
+            }
+        }
     }
-    return -1;
 }
-void printArray(int numbers[], int sz)
-{
-	int i;
-	printf("Number array : ");
-	for (i = 0;i<sz;++i)
-	{
-		printf("%d ",numbers[i]);
-	}
-	printf("\n");
+//bubble sort
+void selectionSort(struct Element arr[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        int min = i;
+        for (int j = i + 1; j < n; j++) {
+            if (arr[j].value < arr[min].value) {
+                min = j;
+            }
+        }
+        struct Element temp = arr[min];
+        arr[min] = arr[i];
+        arr[i] = temp;
+        arr[i].swaps++;
+        arr[min].swaps++;
+    }
 }
+//selection sort
+int main() {
+    int array1[] = {97, 16, 45, 63, 13, 22, 7, 58, 72};
+    int array2[] = {90, 80, 70, 60, 50, 40, 30, 20, 10};
+    int n = sizeof(array1) / sizeof(array1[0]);
+    struct Element elements1_bubble[n];
+    struct Element elements1_selection[n];
+    struct Element elements2_bubble[n];
+    struct Element elements2_selection[n];
+  
+    for (int i = 0; i < n; i++) {
+        elements1_bubble[i].value = array1[i];
+        elements1_bubble[i].swaps = 0;
 
-int main(void)
-{
-	int i, numInputs;
-	char* str;
-	float average;
-	int value;
-	int index;
-	int* numArray = NULL;
-	int countOfNums;
-	FILE* inFile = fopen("input.txt","r");
+        elements1_selection[i].value = array1[i];
+        elements1_selection[i].swaps = 0;
 
-	fscanf(inFile, " %d\n", &numInputs);
-	
-	while (numInputs-- > 0)
-	{
-		fscanf(inFile, " %d\n", &countOfNums);
-		numArray = (int *) malloc(countOfNums * sizeof(int));
-		average = 0;
-		for (i = 0; i < countOfNums; i++)
-		{
-			fscanf(inFile," %d", &value);
-			numArray[i] = value;
-			average += numArray[i];
-		}
+        elements2_bubble[i].value = array2[i];
+        elements2_bubble[i].swaps = 0;
 
-		printArray(numArray, countOfNums);
-		value = average / countOfNums;
-		index = search(numArray, 0, countOfNums - 1, value);
-		if (index >= 0)
-		{
-			printf("Item %d exists in the number array at index %d!\n",value, index);
-		}
-		else
-		{
-			printf("Item %d does not exist in the number array!\n", value);
-		}
+        elements2_selection[i].value = array2[i];
+        elements2_selection[i].swaps = 0;
+    }
+    bubbleSort(elements1_bubble, n);
+    printf("array1 Bubble Sort:\n");
+    for (int i = 0; i < n; i++) {
+        printf("%d: %d \n", elements1_bubble[i].value, elements1_bubble[i].swaps);
+    }
+    int totalSwaps1_bubble = 0;
+    for (int i = 0; i < n; i++) {
+        totalSwaps1_bubble += elements1_bubble[i].swaps;
+    }
+    printf("%d\n\n", totalSwaps1_bubble/2);
+    bubbleSort(elements2_bubble, n);
+    printf("array2 Bubble Sort:\n");
+    for (int i = 0; i < n; i++) {
+        printf("%d: %d \n", elements2_bubble[i].value, elements2_bubble[i].swaps);
+    }
+    int totalSwaps2_bubble = 0;
+    for (int i = 0; i < n; i++) {
+        totalSwaps2_bubble += elements2_bubble[i].swaps;
+    }
+    printf("%d\n\n", totalSwaps2_bubble/2);
+    selectionSort(elements1_selection, n);
+    printf("array1 Selection Sort:\n");
+    for (int i = 0; i < n; i++) {
+        printf("%d: %d \n", elements1_selection[i].value, elements1_selection[i].swaps);
+    }
+    int totalSwaps1_selection = n - 1; 
+    printf("%d\n\n", totalSwaps1_selection);
 
-		free(numArray);
-	}
+    selectionSort(elements2_selection, n);
+    printf("array2 Selection Sort:\n");
+    for (int i = 0; i < n; i++) {
+        printf("%d: %d \n", elements2_selection[i].value, elements2_selection[i].swaps);
+    }
+    int totalSwaps2_selection = n - 1;
+    printf("%d\n\n", totalSwaps2_selection/2);
+  //prints everything out
 
-	fclose(inFile);
+    return 0;
 }
